@@ -11,3 +11,141 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  email        String @unique
+  passwordHash String
+
+  nickname  String?
+  avatarUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations      Translation[]
+  dictionaryFolders DictionaryFolder[]
+  dictionaryEntries DictionaryEntry[]
+  flashcardDecks    FlashcardDeck[]
+  flashcards        Flashcard[]
+}
+
+model Translation {
+  id String @id @default(uuid()) @db.Uuid
+
+  sourceText     String @db.Text
+  translatedText String @db.Text
+
+  sourceLanguage String
+  targetLanguage String
+
+  provider  String?
+  modelName String?
+
+  createdAt DateTime @default(now())
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dictionaryEntries DictionaryEntry[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([sourceLanguage, targetLanguage])
+}
+
+model DictionaryFolder {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String
+  description String? @db.Text
+  color       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  entries DictionaryEntry[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model DictionaryEntry {
+  id String @id @default(uuid()) @db.Uuid
+
+  sourceText     String @db.Text
+  translatedText String @db.Text
+
+  sourceLanguage String
+  targetLanguage String
+
+  context String? @db.Text
+  note    String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  dictionaryFolderId String?           @db.Uuid
+  dictionaryFolder   DictionaryFolder? @relation(fields: [dictionaryFolderId], references: [id], onDelete: SetNull)
+
+  translationId String?      @db.Uuid
+  translation   Translation? @relation(fields: [translationId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([dictionaryFolderId])
+  @@index([translationId])
+  @@index([createdAt])
+  @@index([sourceLanguage, targetLanguage])
+}
+
+model FlashcardDeck {
+  id String @id @default(uuid()) @db.Uuid
+
+  name        String
+  description String? @db.Text
+  color       String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  flashcards Flashcard[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Flashcard {
+  id String @id @default(uuid()) @db.Uuid
+
+  frontText String @db.Text
+  backText  String @db.Text
+
+  frontHint String? @db.Text
+  backHint  String? @db.Text
+
+  sourceLanguage String?
+  targetLanguage String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  flashcardDeckId String?        @db.Uuid
+  flashcardDeck   FlashcardDeck? @relation(fields: [flashcardDeckId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([flashcardDeckId])
+  @@index([createdAt])
+}
