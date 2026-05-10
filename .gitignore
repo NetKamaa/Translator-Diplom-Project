@@ -1,16 +1,24 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 
-# Build
+# Build outputs
 dist/
+dist-ssr/
 build/
 .next/
 .vite/
+coverage/
+
+# TypeScript
+*.tsbuildinfo
 
 # Env
 .env
 .env.local
 .env.*.local
+*.local
+!.env.example
 
 # Logs
 logs/
@@ -18,6 +26,8 @@ logs/
 npm-debug.log*
 pnpm-debug.log*
 yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
 
 # OS
 .DS_Store
@@ -26,10 +36,15 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# Prisma
+# Prisma local files
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
 
-# Docker
+# Docker local volumes
 docker/postgres_data/
