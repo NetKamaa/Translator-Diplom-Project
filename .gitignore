@@ -45,6 +45,7 @@ Thumbs.db
 # Prisma local files
 backend/prisma/dev.db
 backend/prisma/dev.db-journal
+backend/src/generated/prisma/
 
 # Docker local volumes
 docker/postgres_data/
