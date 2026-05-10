@@ -48,3 +48,17 @@ backend/prisma/dev.db-journal
 
 # Docker local volumes
 docker/postgres_data/
+
+# Vercel
+.vercel/
+
+# Railway / Render / Fly local metadata
+.railway/
+
+# Local uploads/files
+uploads/
+backend/uploads/
+
+# Temporary files
+tmp/
+temp/
