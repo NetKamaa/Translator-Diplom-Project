@@ -38,7 +38,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(data.email);
 
     if (!user) {
-      throw new ConflictException('Invalid email or password');
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const isPasswordValid = await argon2.verify(
