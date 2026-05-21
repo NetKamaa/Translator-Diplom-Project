@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
+import { TranslationsController } from './translations/translations.controller.js';
+import { TranslationsModule } from './translations/translations.module.js';
+import { TranslationsService } from './translations/translations.service.js';
 import { UsersModule } from './users/users.module.js';
 
 @Module({
@@ -12,6 +15,9 @@ import { UsersModule } from './users/users.module.js';
     PrismaModule,
     UsersModule,
     AuthModule,
+    TranslationsModule,
   ],
+  controllers: [TranslationsController],
+  providers: [TranslationsService],
 })
 export class AppModule {}
