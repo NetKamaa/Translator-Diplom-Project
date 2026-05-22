@@ -3,19 +3,7 @@ import { AuthService } from './auth.service.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterDto } from './dto/register.dto.js';
 import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
-
-type TAuthenticatedUser = {
-  id: string;
-  email: string;
-  nickname: string | null;
-  avatarUrl: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
-
-type TAuthenticatedRequest = {
-  user: TAuthenticatedUser;
-};
+import type { TRequestWithUser } from './types/request-with-user.type.js';
 
 @Controller('auth')
 export class AuthController {
@@ -33,7 +21,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req: TAuthenticatedRequest) {
+  getProfile(@Req() req: TRequestWithUser) {
     return req.user;
   }
 }

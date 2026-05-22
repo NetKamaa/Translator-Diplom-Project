@@ -9,20 +9,11 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import type { Request } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
 import { CreateTranslationDto } from './dto/create.translation.dto.js';
 import { UpdateTranslationDto } from './dto/update.translation.dto.js';
 import { TranslationsService } from './translations.service.js';
-
-type TJwtUser = {
-  id: string;
-  email: string;
-};
-
-type TRequestWithUser = Request & {
-  user: TJwtUser;
-};
 
 @UseGuards(JwtAuthGuard)
 @Controller('translations')
