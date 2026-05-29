@@ -5,5 +5,6 @@ import { DictionaryFoldersService } from './dictionary-folders.service.js';
 @Module({
   controllers: [DictionaryFoldersController],
   providers: [DictionaryFoldersService],
+  exports: [DictionaryFoldersService],
 })
 export class DictionaryFoldersModule {}
