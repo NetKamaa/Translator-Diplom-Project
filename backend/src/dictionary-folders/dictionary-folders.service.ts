@@ -35,7 +35,7 @@ export class DictionaryFoldersService {
   }
 
   async findOneFolder(userId: string, id: string) {
-    const folder = await this.prisma.dictionaryFolder.findUnique({
+    const folder = await this.prisma.dictionaryFolder.findFirst({
       where: { id, userId },
     });
 

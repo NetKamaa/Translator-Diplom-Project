@@ -1,7 +1,8 @@
-import { IsHexColor, IsOptional, IsString } from 'class-validator';
+import { IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateDictionaryFolder {
   @IsString()
+  @IsNotEmpty()
   name!: string;
 
   @IsString()

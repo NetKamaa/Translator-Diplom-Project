@@ -1,15 +1,19 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateDictionaryEntry {
   @IsString()
+  @IsNotEmpty()
   sourceText!: string;
 
+  @IsNotEmpty()
   @IsString()
   translatedText!: string;
 
+  @IsNotEmpty()
   @IsString()
   sourceLanguage!: string;
 
+  @IsNotEmpty()
   @IsString()
   targetLanguage!: string;
 
