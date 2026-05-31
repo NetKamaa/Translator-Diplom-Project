@@ -1,6 +1,6 @@
 import { IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class UpdateFlashcardDeckDto {
+export class UpdateFlashCardDeckDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
