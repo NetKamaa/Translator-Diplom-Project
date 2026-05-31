@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { DictionaryEntriesModule } from './dictionary-entries/dictionary-entries.module.js';
 import { DictionaryFoldersModule } from './dictionary-folders/dictionary-folders.module.js';
 import { FlashcardDecksModule } from './flashcard-decks/flashcard-decks.module.js';
+import { FlashcardsModule } from './flashcards/flashcards.module.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { TranslationsController } from './translations/translations.controller.js';
 import { TranslationsModule } from './translations/translations.module.js';
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module.js';
     DictionaryFoldersModule,
     DictionaryEntriesModule,
     FlashcardDecksModule,
+    FlashcardsModule,
   ],
   controllers: [TranslationsController],
   providers: [TranslationsService],
