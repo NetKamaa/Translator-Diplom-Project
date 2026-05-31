@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
-import { CreateFlashcardDeckDto } from './dto/create-flashcard-decks.dto.js';
-import { UpdateFlashcardDeckDto } from './dto/update-flashcard-decks.dto.js';
+import { CreateFlashCardDeckDto } from './dto/create-flashcard-decks.dto.js';
+import { UpdateFlashCardDeckDto } from './dto/update-flashcard-decks.dto.js';
 import { FlashcardDecksService } from './flashcard-decks.service.js';
 
 @UseGuards(JwtAuthGuard)
@@ -21,13 +21,13 @@ export class FlashcardDecksController {
   constructor(private readonly flashcardDecksService: FlashcardDecksService) {}
 
   @Post()
-  create(@Req() req: TRequestWithUser, @Body() dto: CreateFlashcardDeckDto) {
-    return this.flashcardDecksService.createFlashcardDeck(req.user.id, dto);
+  create(@Req() req: TRequestWithUser, @Body() dto: CreateFlashCardDeckDto) {
+    return this.flashcardDecksService.createFlashCardDeck(req.user.id, dto);
   }
 
   @Get()
   getAll(@Req() req: TRequestWithUser) {
-    return this.flashcardDecksService.getAllFlashcardDecks(req.user.id);
+    return this.flashcardDecksService.getAllFlashCardDecks(req.user.id);
   }
 
   @Get(':id')
@@ -36,10 +36,10 @@ export class FlashcardDecksController {
   }
 
   @Patch(':id')
-  update(
+  patch(
     @Req() req: TRequestWithUser,
     @Param('id') id: string,
-    @Body() dto: UpdateFlashcardDeckDto,
+    @Body() dto: UpdateFlashCardDeckDto,
   ) {
     return this.flashcardDecksService.updateOneFlashCardDeck(
       req.user.id,

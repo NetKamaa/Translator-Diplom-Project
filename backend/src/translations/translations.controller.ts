@@ -27,12 +27,12 @@ export class TranslationsController {
 
   @Get()
   getAll(@Req() req: TRequestWithUser) {
-    return this.translationsService.findAllTranslations(req.user.id);
+    return this.translationsService.getAllTranslations(req.user.id);
   }
 
   @Get(':id')
   getOne(@Req() req: TRequestWithUser, @Param('id') id: string) {
-    return this.translationsService.findOneTranslation(req.user.id, id);
+    return this.translationsService.getOneTranslation(req.user.id, id);
   }
 
   @Patch(':id')

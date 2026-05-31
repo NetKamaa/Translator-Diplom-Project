@@ -27,14 +27,14 @@ export class DictionaryFoldersService {
     }
   }
 
-  async findAllFolders(userId: string) {
+  async getAllFolders(userId: string) {
     return await this.prisma.dictionaryFolder.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async findOneFolder(userId: string, id: string) {
+  async getOneFolder(userId: string, id: string) {
     const folder = await this.prisma.dictionaryFolder.findFirst({
       where: { id, userId },
     });
@@ -51,7 +51,7 @@ export class DictionaryFoldersService {
     id: string,
     dto: UpdateDictionaryFolderDto,
   ) {
-    await this.findOneFolder(userId, id);
+    await this.getOneFolder(userId, id);
 
     try {
       return await this.prisma.dictionaryFolder.update({
@@ -68,7 +68,7 @@ export class DictionaryFoldersService {
   }
 
   async deleteFolder(userId: string, id: string) {
-    await this.findOneFolder(userId, id);
+    await this.getOneFolder(userId, id);
 
     return await this.prisma.dictionaryFolder.delete({ where: { id } });
   }

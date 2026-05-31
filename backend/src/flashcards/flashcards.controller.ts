@@ -36,7 +36,7 @@ export class FlashcardsController {
   }
 
   @Patch(':id')
-  updateFlashCard(
+  patch(
     @Req() req: TRequestWithUser,
     @Param('id') id: string,
     @Body() dto: UpdateFlashcardDto,

@@ -29,16 +29,16 @@ export class DictionaryFoldersController {
 
   @Get()
   getAll(@Req() req: TRequestWithUser) {
-    return this.dictionaryFoldersService.findAllFolders(req.user.id);
+    return this.dictionaryFoldersService.getAllFolders(req.user.id);
   }
 
   @Get(':id')
   getOne(@Req() req: TRequestWithUser, @Param('id') id: string) {
-    return this.dictionaryFoldersService.findOneFolder(req.user.id, id);
+    return this.dictionaryFoldersService.getOneFolder(req.user.id, id);
   }
 
   @Patch(':id')
-  update(
+  patch(
     @Req() req: TRequestWithUser,
     @Param('id') id: string,
     @Body() dto: UpdateDictionaryFolderDto,

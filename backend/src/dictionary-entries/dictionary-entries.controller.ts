@@ -29,12 +29,12 @@ export class DictionaryEntriesController {
 
   @Get()
   getAll(@Req() req: TRequestWithUser) {
-    return this.dictionaryEntriesService.findAllEntries(req.user.id);
+    return this.dictionaryEntriesService.getAllEntries(req.user.id);
   }
 
   @Get(':id')
   getOne(@Req() req: TRequestWithUser, @Param('id') id: string) {
-    return this.dictionaryEntriesService.findOneEntry(req.user.id, id);
+    return this.dictionaryEntriesService.getOneEntry(req.user.id, id);
   }
 
   @Patch(':id')

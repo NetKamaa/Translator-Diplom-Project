@@ -6,7 +6,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.usersService.findById(id);
+  getById(@Param('id') id: string) {
+    return this.usersService.getById(id);
   }
 }

@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateFlashcardDeckDto } from './dto/create-flashcard-decks.dto.js';
-import { UpdateFlashcardDeckDto } from './dto/update-flashcard-decks.dto.js';
+import { CreateFlashCardDeckDto } from './dto/create-flashcard-decks.dto.js';
+import { UpdateFlashCardDeckDto } from './dto/update-flashcard-decks.dto.js';
 
 @Injectable()
 export class FlashcardDecksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createFlashcardDeck(userId: string, dto: CreateFlashcardDeckDto) {
+  async createFlashCardDeck(userId: string, dto: CreateFlashCardDeckDto) {
     try {
       return await this.prisma.flashcardDeck.create({
         data: {
@@ -27,7 +27,7 @@ export class FlashcardDecksService {
     }
   }
 
-  async getAllFlashcardDecks(userId: string) {
+  async getAllFlashCardDecks(userId: string) {
     return this.prisma.flashcardDeck.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
@@ -49,7 +49,7 @@ export class FlashcardDecksService {
   async updateOneFlashCardDeck(
     userId: string,
     id: string,
-    dto: UpdateFlashcardDeckDto,
+    dto: UpdateFlashCardDeckDto,
   ) {
     await this.getOneFlashCardDeck(userId, id);
 

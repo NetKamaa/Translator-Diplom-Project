@@ -11,13 +11,13 @@ type TCreateUserData = {
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  findByEmail(email: string) {
+  getByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
     });
   }
 
-  findById(id: string) {
+  getById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
       omit: { passwordHash: true },

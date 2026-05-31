@@ -19,14 +19,14 @@ export class TranslationsService {
     });
   }
 
-  async findAllTranslations(userId: string) {
+  async getAllTranslations(userId: string) {
     return this.prisma.translation.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async findOneTranslation(userId: string, id: string) {
+  async getOneTranslation(userId: string, id: string) {
     const translation = await this.prisma.translation.findFirst({
       where: { id, userId },
     });
@@ -43,7 +43,7 @@ export class TranslationsService {
     id: string,
     dto: UpdateTranslationDto,
   ) {
-    await this.findOneTranslation(userId, id);
+    await this.getOneTranslation(userId, id);
 
     return this.prisma.translation.update({
       where: { id },
@@ -57,7 +57,7 @@ export class TranslationsService {
   }
 
   async deleteOneTranslation(userId: string, id: string) {
-    await this.findOneTranslation(userId, id);
+    await this.getOneTranslation(userId, id);
 
     return this.prisma.translation.delete({ where: { id } });
   }

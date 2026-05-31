@@ -15,14 +15,14 @@ export class DictionaryEntriesService {
 
   async createEntry(userId: string, dto: CreateDictionaryEntryDto) {
     if (dto.dictionaryFolderId) {
-      await this.dictionaryFoldersService.findOneFolder(
+      await this.dictionaryFoldersService.getOneFolder(
         userId,
         dto.dictionaryFolderId,
       );
     }
 
     if (dto.translationId) {
-      await this.translationsService.findOneTranslation(
+      await this.translationsService.getOneTranslation(
         userId,
         dto.translationId,
       );
@@ -43,14 +43,14 @@ export class DictionaryEntriesService {
     });
   }
 
-  async findAllEntries(userId: string) {
+  async getAllEntries(userId: string) {
     return this.prisma.dictionaryEntry.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
 
-  async findOneEntry(userId: string, id: string) {
+  async getOneEntry(userId: string, id: string) {
     const entry = await this.prisma.dictionaryEntry.findFirst({
       where: { userId, id },
     });
@@ -63,17 +63,17 @@ export class DictionaryEntriesService {
   }
 
   async updateEntry(userId: string, id: string, dto: UpdateDictionaryEntryDto) {
-    await this.findOneEntry(userId, id);
+    await this.getOneEntry(userId, id);
 
     if (dto.dictionaryFolderId) {
-      await this.dictionaryFoldersService.findOneFolder(
+      await this.dictionaryFoldersService.getOneFolder(
         userId,
         dto.dictionaryFolderId,
       );
     }
 
     if (dto.translationId) {
-      await this.translationsService.findOneTranslation(
+      await this.translationsService.getOneTranslation(
         userId,
         dto.translationId,
       );
@@ -95,7 +95,7 @@ export class DictionaryEntriesService {
   }
 
   async deleteEntry(userId: string, id: string) {
-    await this.findOneEntry(userId, id);
+    await this.getOneEntry(userId, id);
 
     return this.prisma.dictionaryEntry.delete({ where: { id } });
   }
