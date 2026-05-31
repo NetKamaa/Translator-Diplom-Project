@@ -1,6 +1,6 @@
 import { IsHexColor, IsOptional, IsString } from 'class-validator';
 
-export class UpdateDictionaryFolder {
+export class UpdateDictionaryFolderDto {
   @IsString()
   @IsOptional()
   name?: string;

@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { DictionaryFoldersService } from '../dictionary-folders/dictionary-folders.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { TranslationsService } from '../translations/translations.service.js';
-import { CreateDictionaryEntry } from './dto/create.dictionary.entry.dto.js';
-import { UpdateDictionaryEntry } from './dto/update.dictionary.entry.dto.js';
+import { CreateDictionaryEntryDto } from './dto/create-dictionary-entry.dto.js';
+import { UpdateDictionaryEntryDto } from './dto/update-dictionary-entry.dto.js';
 
 @Injectable()
 export class DictionaryEntriesService {
@@ -13,7 +13,7 @@ export class DictionaryEntriesService {
     private readonly translationsService: TranslationsService,
   ) {}
 
-  async createEntry(userId: string, dto: CreateDictionaryEntry) {
+  async createEntry(userId: string, dto: CreateDictionaryEntryDto) {
     if (dto.dictionaryFolderId) {
       await this.dictionaryFoldersService.findOneFolder(
         userId,
@@ -62,7 +62,7 @@ export class DictionaryEntriesService {
     return entry;
   }
 
-  async updateEntry(userId: string, id: string, dto: UpdateDictionaryEntry) {
+  async updateEntry(userId: string, id: string, dto: UpdateDictionaryEntryDto) {
     await this.findOneEntry(userId, id);
 
     if (dto.dictionaryFolderId) {

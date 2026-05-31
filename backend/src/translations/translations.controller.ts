@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
-import { CreateTranslationDto } from './dto/create.translation.dto.js';
-import { UpdateTranslationDto } from './dto/update.translation.dto.js';
+import { CreateTranslationDto } from './dto/create-translation.dto.js';
+import { UpdateTranslationDto } from './dto/update-translation.dto.js';
 import { TranslationsService } from './translations.service.js';
 
 @UseGuards(JwtAuthGuard)

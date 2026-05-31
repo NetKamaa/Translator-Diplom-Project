@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class CreateDictionaryEntry {
+export class CreateDictionaryEntryDto {
   @IsString()
   @IsNotEmpty()
   sourceText!: string;

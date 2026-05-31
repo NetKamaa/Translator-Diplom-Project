@@ -12,8 +12,8 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
 import { DictionaryEntriesService } from './dictionary-entries.service.js';
-import { CreateDictionaryEntry } from './dto/create.dictionary.entry.dto.js';
-import { UpdateDictionaryEntry } from './dto/update.dictionary.entry.dto.js';
+import { CreateDictionaryEntryDto } from './dto/create-dictionary-entry.dto.js';
+import { UpdateDictionaryEntryDto } from './dto/update-dictionary-entry.dto.js';
 
 @UseGuards(JwtAuthGuard)
 @Controller('dictionary-entries')
@@ -23,7 +23,7 @@ export class DictionaryEntriesController {
   ) {}
 
   @Post()
-  create(@Req() req: TRequestWithUser, @Body() dto: CreateDictionaryEntry) {
+  create(@Req() req: TRequestWithUser, @Body() dto: CreateDictionaryEntryDto) {
     return this.dictionaryEntriesService.createEntry(req.user.id, dto);
   }
 
@@ -40,7 +40,7 @@ export class DictionaryEntriesController {
   @Patch(':id')
   update(
     @Req() req: TRequestWithUser,
-    @Body() dto: UpdateDictionaryEntry,
+    @Body() dto: UpdateDictionaryEntryDto,
     @Param('id') id: string,
   ) {
     return this.dictionaryEntriesService.updateEntry(req.user.id, id, dto);

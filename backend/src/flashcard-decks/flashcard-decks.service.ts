@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateFlashcardDeckDto } from './dto/create.flashcard.decks.dto.js';
-import { UpdateFlashcardDeckDto } from './dto/update.flashcard.decks.dto.js';
+import { CreateFlashcardDeckDto } from './dto/create-flashcard-decks.dto.js';
+import { UpdateFlashcardDeckDto } from './dto/update-flashcard-decks.dto.js';
 
 @Injectable()
 export class FlashcardDecksService {

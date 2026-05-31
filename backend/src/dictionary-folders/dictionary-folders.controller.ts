@@ -12,8 +12,8 @@ import {
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
 import { DictionaryFoldersService } from './dictionary-folders.service.js';
-import { CreateDictionaryFolder } from './dto/create.dictionary.folder.dto.js';
-import { UpdateDictionaryFolder } from './dto/update.dictionary.folder.dto.js';
+import { CreateDictionaryFolderDto } from './dto/create-dictionary-folder.dto.js';
+import { UpdateDictionaryFolderDto } from './dto/update-dictionary-folder.dto.js';
 
 @UseGuards(JwtAuthGuard)
 @Controller('dictionary-folders')
@@ -23,7 +23,7 @@ export class DictionaryFoldersController {
   ) {}
 
   @Post()
-  create(@Req() req: TRequestWithUser, @Body() dto: CreateDictionaryFolder) {
+  create(@Req() req: TRequestWithUser, @Body() dto: CreateDictionaryFolderDto) {
     return this.dictionaryFoldersService.createFolder(req.user.id, dto);
   }
 
@@ -41,7 +41,7 @@ export class DictionaryFoldersController {
   update(
     @Req() req: TRequestWithUser,
     @Param('id') id: string,
-    @Body() dto: UpdateDictionaryFolder,
+    @Body() dto: UpdateDictionaryFolderDto,
   ) {
     return this.dictionaryFoldersService.updateFolder(req.user.id, id, dto);
   }

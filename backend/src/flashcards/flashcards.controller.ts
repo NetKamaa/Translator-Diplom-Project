@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
-import { CreateFlashcard } from './dto/create.flashcard.dto.js';
-import { UpdateFlashcard } from './dto/update.flashcard.dto.js';
+import { CreateFlashcardDto } from './dto/create-flashcard.dto.js';
+import { UpdateFlashcardDto } from './dto/update-flashcard.dto.js';
 import { FlashcardsService } from './flashcards.service.js';
 
 @UseGuards(JwtAuthGuard)
@@ -21,7 +21,7 @@ export class FlashcardsController {
   constructor(private readonly flashcardsService: FlashcardsService) {}
 
   @Post()
-  create(@Req() req: TRequestWithUser, @Body() dto: CreateFlashcard) {
+  create(@Req() req: TRequestWithUser, @Body() dto: CreateFlashcardDto) {
     return this.flashcardsService.createFlashCard(req.user.id, dto);
   }
 
@@ -39,7 +39,7 @@ export class FlashcardsController {
   updateFlashCard(
     @Req() req: TRequestWithUser,
     @Param('id') id: string,
-    @Body() dto: UpdateFlashcard,
+    @Body() dto: UpdateFlashcardDto,
   ) {
     return this.flashcardsService.updateFlashCard(req.user.id, id, dto);
   }

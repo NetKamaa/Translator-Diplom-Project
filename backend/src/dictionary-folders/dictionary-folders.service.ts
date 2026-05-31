@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '../generated/prisma/client.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateDictionaryFolder } from './dto/create.dictionary.folder.dto.js';
-import { UpdateDictionaryFolder } from './dto/update.dictionary.folder.dto.js';
+import { CreateDictionaryFolderDto } from './dto/create-dictionary-folder.dto.js';
+import { UpdateDictionaryFolderDto } from './dto/update-dictionary-folder.dto.js';
 
 @Injectable()
 export class DictionaryFoldersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createFolder(userId: string, dto: CreateDictionaryFolder) {
+  async createFolder(userId: string, dto: CreateDictionaryFolderDto) {
     try {
       return await this.prisma.dictionaryFolder.create({
         data: {
@@ -46,7 +46,11 @@ export class DictionaryFoldersService {
     return folder;
   }
 
-  async updateFolder(userId: string, id: string, dto: UpdateDictionaryFolder) {
+  async updateFolder(
+    userId: string,
+    id: string,
+    dto: UpdateDictionaryFolderDto,
+  ) {
     await this.findOneFolder(userId, id);
 
     try {

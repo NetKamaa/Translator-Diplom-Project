@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
-import { CreateFlashcardDeckDto } from './dto/create.flashcard.decks.dto.js';
-import { UpdateFlashcardDeckDto } from './dto/update.flashcard.decks.dto.js';
+import { CreateFlashcardDeckDto } from './dto/create-flashcard-decks.dto.js';
+import { UpdateFlashcardDeckDto } from './dto/update-flashcard-decks.dto.js';
 import { FlashcardDecksService } from './flashcard-decks.service.js';
 
 @UseGuards(JwtAuthGuard)

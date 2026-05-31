@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FlashcardDecksService } from '../flashcard-decks/flashcard-decks.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateFlashcard } from './dto/create.flashcard.dto.js';
-import { UpdateFlashcard } from './dto/update.flashcard.dto.js';
+import { CreateFlashcardDto } from './dto/create-flashcard.dto.js';
+import { UpdateFlashcardDto } from './dto/update-flashcard.dto.js';
 
 @Injectable()
 export class FlashcardsService {
@@ -11,7 +11,7 @@ export class FlashcardsService {
     private readonly flashcardDeckService: FlashcardDecksService,
   ) {}
 
-  async createFlashCard(userId: string, dto: CreateFlashcard) {
+  async createFlashCard(userId: string, dto: CreateFlashcardDto) {
     if (dto.flashcardDeckId) {
       await this.flashcardDeckService.getOneFlashCardDeck(
         userId,
@@ -52,7 +52,7 @@ export class FlashcardsService {
     return flashCard;
   }
 
-  async updateFlashCard(userId: string, id: string, dto: UpdateFlashcard) {
+  async updateFlashCard(userId: string, id: string, dto: UpdateFlashcardDto) {
     await this.getOneFlashCard(userId, id);
 
     if (dto.flashcardDeckId) {

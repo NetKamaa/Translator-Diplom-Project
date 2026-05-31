@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class UpdateDictionaryEntry {
+export class UpdateDictionaryEntryDto {
   @IsOptional()
   @IsString()
   sourceText?: string;

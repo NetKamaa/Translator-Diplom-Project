@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class UpdateFlashcard {
+export class UpdateFlashcardDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
