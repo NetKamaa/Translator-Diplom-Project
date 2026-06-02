@@ -1,20 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { CreateTranslationDto } from './dto/create-translation.dto.js';
 import { UpdateTranslationDto } from './dto/update-translation.dto.js';
+import type { TCreateTranslationData } from './types/create-translation-data.type.js';
 
 @Injectable()
 export class TranslationsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createTranslation(userId: string, dto: CreateTranslationDto) {
+  async createTranslation(userId: string, data: TCreateTranslationData) {
     return this.prisma.translation.create({
       data: {
         userId,
-        sourceText: dto.sourceText,
-        translatedText: dto.translatedText,
-        sourceLanguage: dto.sourceLanguage,
-        targetLanguage: dto.targetLanguage,
+        sourceText: data.sourceText,
+        translatedText: data.translatedText,
+        sourceLanguage: data.sourceLanguage,
+        targetLanguage: data.targetLanguage,
+        provider: data.provider,
+        modelName: data.modelName,
       },
     });
   }
