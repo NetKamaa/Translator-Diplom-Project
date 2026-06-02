@@ -1,5 +1,6 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import type { TRequestWithUser } from '../auth/types/request-with-user.type.js';
 import { AiService } from './ai.service.js';
 import { TranslateDto } from './dto/translate.dto.js';
 
@@ -9,7 +10,7 @@ export class AiController {
   constructor(private readonly aiService: AiService) {}
 
   @Post('translate')
-  translate(@Body() dto: TranslateDto) {
-    return this.aiService.translate(dto);
+  translate(@Req() req: TRequestWithUser, @Body() dto: TranslateDto) {
+    return this.aiService.translate(req.user.id, dto);
   }
 }

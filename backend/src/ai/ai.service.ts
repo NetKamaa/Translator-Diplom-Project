@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { TranslationsService } from '../translations/translations.service.js';
 import { TranslateDto } from './dto/translate.dto.js';
 
 @Injectable()
 export class AiService {
-  translate(dto: TranslateDto) {
+  constructor(private readonly translationsService: TranslationsService) {}
+
+  translate(userId: string, dto: TranslateDto) {
     const translatedText = this.mockTranslate(dto.sourceText);
 
-    return {
+    return this.translationsService.createTranslation(userId, {
       sourceText: dto.sourceText,
       translatedText,
       sourceLanguage: dto.sourceLanguage,
       targetLanguage: dto.targetLanguage,
       provider: 'mock',
       modelName: 'mock-translator',
-    };
+    });
   }
 
   private mockTranslate(text: string): string {
