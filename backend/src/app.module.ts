@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AiModule } from './ai/ai.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { DictionaryEntriesModule } from './dictionary-entries/dictionary-entries.module.js';
 import { DictionaryFoldersModule } from './dictionary-folders/dictionary-folders.module.js';
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module.js';
     DictionaryEntriesModule,
     FlashcardDecksModule,
     FlashcardsModule,
+    AiModule,
   ],
   controllers: [TranslationsController],
   providers: [TranslationsService],
