@@ -9,7 +9,7 @@ export function ProtectedRoute({ children }: TProtectedRouteProps) {
   const accessToken = localStorage.getItem("accessToken");
 
   if (!accessToken) {
-    return <Navigate to="login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
