@@ -3,6 +3,7 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { ProfilePage } from "@/pages/ProfilePage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { TranslatePage } from "@/pages/TranslatePage";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
@@ -16,6 +17,8 @@ function App() {
 
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="register" element={<RegisterPage />}></Route>
+
+        <Route path="profile" element={<ProfilePage />}></Route>
 
         <Route
           element={
