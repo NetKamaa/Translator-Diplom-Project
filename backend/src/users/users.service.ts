@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { UpdateUserProfileDto } from './dto/update-user-profile.dto.js';
 
 type TCreateUserData = {
   email: string;
@@ -27,6 +28,17 @@ export class UsersService {
   create(data: TCreateUserData) {
     return this.prisma.user.create({
       data,
+      omit: { passwordHash: true },
+    });
+  }
+
+  updateProfile(userId: string, dto: UpdateUserProfileDto) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        nickname: dto.nickname,
+        avatarUrl: dto.avatarUrl,
+      },
       omit: { passwordHash: true },
     });
   }
