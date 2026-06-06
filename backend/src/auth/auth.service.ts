@@ -31,7 +31,12 @@ export class AuthService {
       nickname: data.nickname,
     });
 
-    return user;
+    const accessToken = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+    });
+
+    return { accessToken };
   }
 
   async login(data: LoginDto) {

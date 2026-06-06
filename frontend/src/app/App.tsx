@@ -7,7 +7,7 @@ import { ProfilePage } from "@/pages/ProfilePage";
 import { RegisterPage } from "@/pages/RegisterPage";
 import { TranslatePage } from "@/pages/TranslatePage";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 
 function App() {
   return (
@@ -18,8 +18,6 @@ function App() {
         <Route path="login" element={<LoginPage />}></Route>
         <Route path="register" element={<RegisterPage />}></Route>
 
-        <Route path="profile" element={<ProfilePage />}></Route>
-
         <Route
           element={
             <ProtectedRoute>
@@ -29,7 +27,13 @@ function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />}></Route>
           <Route path="/translate" element={<TranslatePage />}></Route>
+          <Route path="/profile" element={<ProfilePage />}></Route>
         </Route>
+
+        <Route
+          path="/app"
+          element={<Navigate to="/dashboard" replace />}
+        ></Route>
 
         <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
