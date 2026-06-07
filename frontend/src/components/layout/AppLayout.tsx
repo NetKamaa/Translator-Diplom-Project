@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 
-import { getProfile } from "@/features/profile/api/profile.api";
+import { useProfile } from "@/features/profile/context/use-profile";
 import type { TUserProfile } from "@/features/profile/types/profile.types";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,24 +28,11 @@ function getUserInitials(profile: TUserProfile | null) {
 export function AppLayout() {
   const navigate = useNavigate();
 
-  const [profile, setProfile] = useState<TUserProfile | null>(null);
-
-  useEffect(() => {
-    async function loadProfile() {
-      try {
-        const data = await getProfile();
-
-        setProfile(data);
-      } catch {
-        setProfile(null);
-      }
-    }
-
-    loadProfile();
-  }, []);
+  const { profile, clearProfile } = useProfile();
 
   function handleLogout() {
     localStorage.removeItem("accessToken");
+    clearProfile();
     navigate("/login");
   }
 
@@ -97,6 +83,7 @@ export function AppLayout() {
                   <p className="text-sm font-medium">
                     {profile?.nickname ?? "User"}
                   </p>
+
                   <p className="truncate text-xs text-muted-foreground">
                     {profile?.email ?? "Profile"}
                   </p>
