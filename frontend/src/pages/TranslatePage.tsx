@@ -173,33 +173,38 @@ export function TranslatePage() {
       <form className="grid gap-6 lg:grid-cols-2" onSubmit={handleSubmit}>
         <Card>
           <CardHeader>
-            <CardTitle>Source text</CardTitle>
-            <CardDescription>
-              Enter the text you want to translate.
-            </CardDescription>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <CardTitle>Translation</CardTitle>
+                <CardDescription>
+                  The result will be saved to translation history.
+                </CardDescription>
+              </div>
+
+              <div className="w-full shrink-0 space-y-2 sm:ml-auto sm:w-40">
+                <Select
+                  value={targetLanguage}
+                  onValueChange={setTargetLanguage}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select target language" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {languageOptions.map((language) => (
+                      <SelectItem key={language.value} value={language.value}>
+                        {language.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </CardHeader>
 
           <CardContent className="space-y-5">
             <div className="space-y-2">
-              <Label>From</Label>
-
-              <Select value={sourceLanguage} onValueChange={setSourceLanguage}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select source language" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  {languageOptions.map((language) => (
-                    <SelectItem key={language.value} value={language.value}>
-                      {language.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="sourceText">Text</Label>
+              <Label htmlFor="sourceText">Text to translate</Label>
 
               <Textarea
                 id="sourceText"
@@ -230,30 +235,37 @@ export function TranslatePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Translation</CardTitle>
-            <CardDescription>
-              The result will be saved to translation history.
-            </CardDescription>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+              <div className="min-w-0 flex-1 space-y-1.5">
+                <CardTitle>Translation</CardTitle>
+                <CardDescription>
+                  The result will be saved to translation history.
+                </CardDescription>
+              </div>
+
+              <div className="w-full shrink-0 space-y-2 sm:ml-auto sm:w-40">
+                <Select
+                  value={targetLanguage}
+                  onValueChange={setTargetLanguage}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select target language" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    {languageOptions.map((language) => (
+                      <SelectItem key={language.value} value={language.value}>
+                        {language.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </CardHeader>
 
-          <CardContent className="space-y-5">
-            <div className="space-y-2">
-              <Label>To</Label>
-
-              <Select value={targetLanguage} onValueChange={setTargetLanguage}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select target language" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  {languageOptions.map((language) => (
-                    <SelectItem key={language.value} value={language.value}>
-                      {language.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <CardContent className="space-y-2">
+            <Label>Translated text</Label>
 
             <div className="min-h-48 rounded-md border bg-muted/40 p-4">
               {translation ? (
