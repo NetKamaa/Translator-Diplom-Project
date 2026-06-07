@@ -31,6 +31,10 @@ export function AppLayout() {
               Dictionary
             </Link>
 
+            <Link to="/flashcards" className="text-sm text-muted-foreground">
+              Flashcards
+            </Link>
+
             <Link to="/profile" className="text-sm text-muted-foreground">
               Profile
             </Link>
