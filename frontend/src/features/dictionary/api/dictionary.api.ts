@@ -40,3 +40,13 @@ export async function createDictionaryEntry(
 
   return response.data;
 }
+
+export async function deleteDictionaryEntry(
+  id: string,
+): Promise<TDictionaryEntry> {
+  const response = await api.delete<TDictionaryEntry>(
+    `/dictionary-entries/${id}`,
+  );
+
+  return response.data;
+}

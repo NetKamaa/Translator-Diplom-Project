@@ -27,6 +27,10 @@ export function AppLayout() {
               Translate
             </Link>
 
+            <Link to="/dictionary" className="text-sm text-muted-foreground">
+              Dictionary
+            </Link>
+
             <Link to="/profile" className="text-sm text-muted-foreground">
               Profile
             </Link>

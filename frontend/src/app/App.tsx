@@ -1,5 +1,6 @@
 import { AppLayout } from "@/components/layout/AppLayout";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { DictionaryPage } from "@/pages/DictionaryPage";
 import { LandingPage } from "@/pages/LandingPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
@@ -27,6 +28,7 @@ function App() {
         >
           <Route path="/dashboard" element={<DashboardPage />}></Route>
           <Route path="/translate" element={<TranslatePage />}></Route>
+          <Route path="/dictionary" element={<DictionaryPage />}></Route>
           <Route path="/profile" element={<ProfilePage />}></Route>
         </Route>
 
