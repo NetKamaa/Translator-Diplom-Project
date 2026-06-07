@@ -10,6 +10,11 @@ import type {
   TDictionaryEntry,
   TDictionaryFolder,
 } from "@/features/dictionary/types/dictionary.types";
+import {
+  createFlashcard,
+  getFlashcardDecks,
+} from "@/features/flashcards/api/flashcards.api";
+import type { TFlashcardDeck } from "@/features/flashcards/types/flashcards.types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -57,18 +62,40 @@ export function DictionaryPage() {
   const [error, setError] = useState("");
   const [folderError, setFolderError] = useState("");
 
+  const [flashcardDecks, setFlashcardDecks] = useState<TFlashcardDeck[]>([]);
+
+  const [selectedEntryForFlashcard, setSelectedEntryForFlashcard] =
+    useState<TDictionaryEntry | null>(null);
+
+  const [flashcardDeckId, setFlashcardDeckId] = useState("none");
+  const [flashcardFrontText, setFlashcardFrontText] = useState("");
+  const [flashcardBackText, setFlashcardBackText] = useState("");
+  const [flashcardFrontHint, setFlashcardFrontHint] = useState("");
+  const [flashcardBackHint, setFlashcardBackHint] = useState("");
+
+  const [isCreateFlashcardDialogOpen, setIsCreateFlashcardDialogOpen] =
+    useState(false);
+
+  const [isCreatingFlashcard, setIsCreatingFlashcard] = useState(false);
+
+  const [flashcardError, setFlashcardError] = useState("");
+  const [flashcardMessage, setFlashcardMessage] = useState("");
+
   useEffect(() => {
     async function loadDictionary() {
       try {
         setError("");
 
-        const [foldersData, entriesData] = await Promise.all([
-          getDictionaryFolders(),
-          getDictionaryEntries(),
-        ]);
+        const [foldersData, entriesData, flashcardDecksData] =
+          await Promise.all([
+            getDictionaryFolders(),
+            getDictionaryEntries(),
+            getFlashcardDecks(),
+          ]);
 
         setFolders(foldersData);
         setEntries(entriesData);
+        setFlashcardDecks(flashcardDecksData);
       } catch {
         setError("Failed to load dictionary");
       } finally {
@@ -141,6 +168,73 @@ export function DictionaryPage() {
       );
     } catch {
       setError("Failed to delete dictionary entry");
+    }
+  }
+
+  function handleOpenCreateFlashcardDialog(entry: TDictionaryEntry) {
+    setSelectedEntryForFlashcard(entry);
+
+    setFlashcardFrontText(entry.sourceText);
+    setFlashcardBackText(entry.translatedText);
+    setFlashcardFrontHint("");
+    setFlashcardBackHint("");
+    setFlashcardDeckId("none");
+
+    setFlashcardError("");
+    setFlashcardMessage("");
+
+    setIsCreateFlashcardDialogOpen(true);
+  }
+
+  async function handleCreateFlashcardFromEntry(
+    event: FormEvent<HTMLFormElement>,
+  ) {
+    event.preventDefault();
+
+    if (!selectedEntryForFlashcard) {
+      setFlashcardError("Dictionary entry is not selected");
+      return;
+    }
+
+    if (!flashcardFrontText.trim()) {
+      setFlashcardError("Front text is required");
+      return;
+    }
+
+    if (!flashcardBackText.trim()) {
+      setFlashcardError("Back text is required");
+      return;
+    }
+
+    setFlashcardError("");
+    setIsCreatingFlashcard(true);
+
+    try {
+      await createFlashcard({
+        frontText: flashcardFrontText.trim(),
+        backText: flashcardBackText.trim(),
+        frontHint: flashcardFrontHint.trim() || undefined,
+        backHint: flashcardBackHint.trim() || undefined,
+        sourceLanguage: selectedEntryForFlashcard.sourceLanguage,
+        targetLanguage: selectedEntryForFlashcard.targetLanguage,
+        flashcardDeckId:
+          flashcardDeckId === "none" ? undefined : flashcardDeckId,
+      });
+
+      setFlashcardMessage("Flashcard created");
+
+      setSelectedEntryForFlashcard(null);
+      setFlashcardFrontText("");
+      setFlashcardBackText("");
+      setFlashcardFrontHint("");
+      setFlashcardBackHint("");
+      setFlashcardDeckId("none");
+
+      setIsCreateFlashcardDialogOpen(false);
+    } catch {
+      setFlashcardError("Failed to create flashcard");
+    } finally {
+      setIsCreatingFlashcard(false);
     }
   }
 
@@ -267,6 +361,116 @@ export function DictionaryPage() {
         </CardContent>
       </Card>
 
+      <Dialog
+        open={isCreateFlashcardDialogOpen}
+        onOpenChange={(open) => {
+          setIsCreateFlashcardDialogOpen(open);
+
+          if (open) {
+            setFlashcardError("");
+            setFlashcardMessage("");
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create flashcard</DialogTitle>
+            <DialogDescription>
+              Create a flashcard from this dictionary entry.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form className="space-y-5" onSubmit={handleCreateFlashcardFromEntry}>
+            <div className="space-y-2">
+              <Label>Deck</Label>
+
+              <Select
+                value={flashcardDeckId}
+                onValueChange={setFlashcardDeckId}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select deck" />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="none">Without deck</SelectItem>
+
+                  {flashcardDecks.map((deck) => (
+                    <SelectItem key={deck.id} value={deck.id}>
+                      {deck.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="flashcardFrontText">Front text</Label>
+
+              <Textarea
+                id="flashcardFrontText"
+                value={flashcardFrontText}
+                className="resize-none"
+                onChange={(event) => {
+                  setFlashcardFrontText(event.target.value);
+                  setFlashcardError("");
+                }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="flashcardBackText">Back text</Label>
+
+              <Textarea
+                id="flashcardBackText"
+                value={flashcardBackText}
+                className="resize-none"
+                onChange={(event) => {
+                  setFlashcardBackText(event.target.value);
+                  setFlashcardError("");
+                }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="flashcardFrontHint">Front hint</Label>
+
+              <Input
+                id="flashcardFrontHint"
+                value={flashcardFrontHint}
+                placeholder="Optional hint"
+                onChange={(event) => setFlashcardFrontHint(event.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="flashcardBackHint">Back hint</Label>
+
+              <Input
+                id="flashcardBackHint"
+                value={flashcardBackHint}
+                placeholder="Optional hint"
+                onChange={(event) => setFlashcardBackHint(event.target.value)}
+              />
+            </div>
+
+            {flashcardError ? (
+              <p className="text-sm text-destructive">{flashcardError}</p>
+            ) : null}
+
+            {flashcardMessage ? (
+              <p className="text-sm text-muted-foreground">
+                {flashcardMessage}
+              </p>
+            ) : null}
+
+            <Button type="submit" disabled={isCreatingFlashcard}>
+              {isCreatingFlashcard ? "Creating..." : "Create flashcard"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Card>
         <CardHeader>
           <CardTitle>Saved entries</CardTitle>
@@ -322,14 +526,25 @@ export function DictionaryPage() {
                       ) : null}
                     </div>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteEntry(entry.id)}
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenCreateFlashcardDialog(entry)}
+                      >
+                        Create flashcard
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteEntry(entry.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
