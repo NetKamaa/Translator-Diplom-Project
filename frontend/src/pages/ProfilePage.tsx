@@ -1,3 +1,9 @@
+import { useEffect, useState, type FormEvent } from "react";
+
+import { getProfile, updateProfile } from "@/features/profile/api/profile.api";
+import type { TUserProfile } from "@/features/profile/types/profile.types";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,12 +14,21 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getProfile, updateProfile } from "@/features/profile/api/profile.api";
-import type { TUserProfile } from "@/features/profile/types/profile.types";
-import { useEffect, useState, type FormEvent } from "react";
+
+function getProfileInitials(profile: TUserProfile | null) {
+  if (!profile) {
+    return "U";
+  }
+
+  if (profile.nickname) {
+    return profile.nickname.slice(0, 2).toUpperCase();
+  }
+
+  return profile.email.slice(0, 2).toUpperCase();
+}
 
 export function ProfilePage() {
-  const [profile, setProfile] = useState<TUserProfile | null>();
+  const [profile, setProfile] = useState<TUserProfile | null>(null);
 
   const [nickname, setNickname] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -48,12 +63,13 @@ export function ProfilePage() {
     event.preventDefault();
 
     setError("");
+    setSuccessMessage("");
     setIsSaving(true);
 
     try {
       const updatedProfile = await updateProfile({
-        nickname: nickname || undefined,
-        avatarUrl: avatarUrl || undefined,
+        nickname: nickname.trim() || undefined,
+        avatarUrl: avatarUrl.trim() || undefined,
       });
 
       setProfile(updatedProfile);
@@ -73,17 +89,29 @@ export function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-2xl space-y-6">
-      <div>
-        <h1 className=" text-3xl font-bold">Profile</h1>
-        <p className="text-muted-foreground">
-          Manage your account information.
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-3xl space-y-6">
+      <Card>
+        <CardContent className="flex flex-col items-center gap-4 pt-8 text-center">
+          <Avatar className="h-28 w-28">
+            <AvatarImage src={profile?.avatarUrl ?? undefined} />
+            <AvatarFallback className="text-3xl">
+              {getProfileInitials(profile)}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold">
+              {profile?.nickname || "Your profile"}
+            </h1>
+
+            <p className="text-sm text-muted-foreground">{profile?.email}</p>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>Account</CardTitle>
+          <CardTitle>Account settings</CardTitle>
           <CardDescription>
             Update your nickname and avatar URL.
           </CardDescription>
@@ -94,7 +122,11 @@ export function ProfilePage() {
             <div className="space-y-2">
               <Label>Email</Label>
 
-              <Input value={profile?.email ?? ""} disabled />
+              <Input
+                value={profile?.email ?? ""}
+                readOnly
+                className="bg-muted"
+              />
             </div>
 
             <div className="space-y-2">
@@ -104,7 +136,10 @@ export function ProfilePage() {
                 id="nickname"
                 value={nickname}
                 placeholder="Your nickname"
-                onChange={(event) => setNickname(event.target.value)}
+                onChange={(event) => {
+                  setNickname(event.target.value);
+                  setSuccessMessage("");
+                }}
               />
             </div>
 
@@ -115,9 +150,28 @@ export function ProfilePage() {
                 id="avatarUrl"
                 value={avatarUrl}
                 placeholder="https://example.com/avatar.png"
-                onChange={(event) => setAvatarUrl(event.target.value)}
+                onChange={(event) => {
+                  setAvatarUrl(event.target.value);
+                  setSuccessMessage("");
+                }}
               />
             </div>
+
+            {avatarUrl ? (
+              <div className="flex items-center gap-3 rounded-xl border p-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={avatarUrl} />
+                  <AvatarFallback>{getProfileInitials(profile)}</AvatarFallback>
+                </Avatar>
+
+                <div>
+                  <p className="text-sm font-medium">Avatar preview</p>
+                  <p className="text-xs text-muted-foreground">
+                    This image will be shown in your profile and navigation.
+                  </p>
+                </div>
+              </div>
+            ) : null}
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
