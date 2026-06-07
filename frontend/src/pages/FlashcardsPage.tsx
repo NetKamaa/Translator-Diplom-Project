@@ -436,7 +436,7 @@ export function FlashcardsPage() {
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                         size="sm"
                         onClick={() => handleDeleteFlashcard(flashcard.id)}
                       >

@@ -1,9 +1,49 @@
+import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router";
 
+import { getProfile } from "@/features/profile/api/profile.api";
+import type { TUserProfile } from "@/features/profile/types/profile.types";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+function getUserInitials(profile: TUserProfile | null) {
+  if (!profile) {
+    return "U";
+  }
+
+  if (profile.nickname) {
+    return profile.nickname.slice(0, 2).toUpperCase();
+  }
+
+  return profile.email.slice(0, 2).toUpperCase();
+}
 
 export function AppLayout() {
   const navigate = useNavigate();
+
+  const [profile, setProfile] = useState<TUserProfile | null>(null);
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const data = await getProfile();
+
+        setProfile(data);
+      } catch {
+        setProfile(null);
+      }
+    }
+
+    loadProfile();
+  }, []);
 
   function handleLogout() {
     localStorage.removeItem("accessToken");
@@ -42,13 +82,42 @@ export function AppLayout() {
               Practice
             </Link>
 
-            <Link to="/profile" className="text-sm text-muted-foreground">
-              Profile
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-10 w-10 rounded-full p-0">
+                  <Avatar>
+                    <AvatarImage src={profile?.avatarUrl ?? undefined} />
+                    <AvatarFallback>{getUserInitials(profile)}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
 
-            <Button variant="outline" size="sm" onClick={handleLogout}>
-              Logout
-            </Button>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5">
+                  <p className="text-sm font-medium">
+                    {profile?.nickname ?? "User"}
+                  </p>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {profile?.email ?? "Profile"}
+                  </p>
+                </div>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link to="/profile">Profile</Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem
+                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
       </header>

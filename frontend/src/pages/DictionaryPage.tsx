@@ -489,7 +489,7 @@ export function DictionaryPage() {
             <div className="space-y-3">
               {filteredEntries.map((entry) => (
                 <div key={entry.id} className="rounded-xl border p-4">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center justify-between gap-4">
                     <div className="space-y-3">
                       <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                         <span>
@@ -538,7 +538,7 @@ export function DictionaryPage() {
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                         size="sm"
                         onClick={() => handleDeleteEntry(entry.id)}
                       >

@@ -334,7 +334,7 @@ export function TranslatePage() {
             <div className="space-y-3">
               {translations.map((translationItem) => (
                 <div key={translationItem.id} className="rounded-xl border p-4">
-                  <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center justify-between gap-4">
                     <div className="space-y-2">
                       <div className="text-xs text-muted-foreground">
                         {translationItem.sourceLanguage} →{" "}
@@ -365,7 +365,7 @@ export function TranslatePage() {
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="destructive"
                         size="sm"
                         onClick={() =>
                           handleDeleteTranslation(translationItem.id)
