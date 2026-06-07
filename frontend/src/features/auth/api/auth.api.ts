@@ -4,7 +4,6 @@ import type {
   TLoginResponse,
   TRegisterRequest,
   TRegisterResponse,
-  TUser,
 } from "../types/auth.types";
 
 export async function login(data: TLoginRequest): Promise<TLoginResponse> {
@@ -17,12 +16,6 @@ export async function register(
   data: TRegisterRequest,
 ): Promise<TRegisterResponse> {
   const response = await api.post<TRegisterResponse>("/auth/register", data);
-
-  return response.data;
-}
-
-export async function getProfile(): Promise<TUser> {
-  const response = await api.get<TUser>("/auth/me");
 
   return response.data;
 }
