@@ -55,6 +55,7 @@ export function DictionaryPage() {
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
 
   const [error, setError] = useState("");
+  const [folderError, setFolderError] = useState("");
 
   useEffect(() => {
     async function loadDictionary() {
@@ -104,11 +105,11 @@ export function DictionaryPage() {
     event.preventDefault();
 
     if (!folderName.trim()) {
-      setError("Folder name is required");
+      setFolderError("Folder name is required");
       return;
     }
 
-    setError("");
+    setFolderError("");
     setIsCreatingFolder(true);
 
     try {
@@ -125,7 +126,7 @@ export function DictionaryPage() {
       setFolderColor("#3b82f6");
       setIsCreateFolderDialogOpen(false);
     } catch {
-      setError("Failed to create dictionary folder");
+      setFolderError("Failed to create dictionary folder");
     } finally {
       setIsCreatingFolder(false);
     }
@@ -159,7 +160,13 @@ export function DictionaryPage() {
 
         <Dialog
           open={isCreateFolderDialogOpen}
-          onOpenChange={setIsCreateFolderDialogOpen}
+          onOpenChange={(open) => {
+            setIsCreateFolderDialogOpen(open);
+
+            if (open) {
+              setFolderError("");
+            }
+          }}
         >
           <DialogTrigger asChild>
             <Button>Create folder</Button>
@@ -181,7 +188,10 @@ export function DictionaryPage() {
                   id="folderName"
                   value={folderName}
                   placeholder="English words"
-                  onChange={(event) => setFolderName(event.target.value)}
+                  onChange={(event) => {
+                    setFolderName(event.target.value);
+                    setFolderError("");
+                  }}
                 />
               </div>
 
@@ -207,6 +217,10 @@ export function DictionaryPage() {
                   onChange={(event) => setFolderColor(event.target.value)}
                 />
               </div>
+
+              {folderError ? (
+                <p className="text-sm text-destructive">{folderError}</p>
+              ) : null}
 
               <Button type="submit" disabled={isCreatingFolder}>
                 {isCreatingFolder ? "Creating..." : "Create folder"}
