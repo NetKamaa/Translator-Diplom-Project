@@ -21,6 +21,11 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  createDictionaryEntry,
+  getDictionaryFolders,
+} from "@/features/dictionary/api/dictionary.api";
+import type { TDictionaryFolder } from "@/features/dictionary/types/dictionary.types";
+import {
   deleteTranslation,
   getTranslations,
 } from "@/features/translations/api/translations.api";
@@ -46,20 +51,34 @@ export function TranslatePage() {
   const [translations, setTranslations] = useState<TTranslation[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadTranslations() {
-      try {
-        const data = await getTranslations();
+  const [dictionaryFolders, setDictionaryFolders] = useState<
+    TDictionaryFolder[]
+  >([]);
 
-        setTranslations(data);
+  const [selectedDictionaryFolderId, setSelectedDictionaryFolderId] =
+    useState<string>("none");
+
+  const [isSavingToDictionary, setIsSavingToDictionary] = useState(false);
+  const [dictionaryMessage, setDictionaryMessage] = useState("");
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [translationsData, foldersData] = await Promise.all([
+          getTranslations(),
+          getDictionaryFolders(),
+        ]);
+
+        setTranslations(translationsData);
+        setDictionaryFolders(foldersData);
       } catch {
-        setError("Failed to load translation history");
+        setError("Failed to load page data");
       } finally {
         setIsHistoryLoading(false);
       }
     }
 
-    loadTranslations();
+    loadData();
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -114,6 +133,32 @@ export function TranslatePage() {
 
     setSourceText(translation?.translatedText ?? sourceText);
     setTranslation(null);
+  }
+
+  async function handleSaveToDictionary(translationItem: TTranslation) {
+    setError("");
+    setDictionaryMessage("");
+    setIsSavingToDictionary(true);
+
+    try {
+      await createDictionaryEntry({
+        sourceText: translationItem.sourceText,
+        translatedText: translationItem.translatedText,
+        sourceLanguage: translationItem.sourceLanguage,
+        targetLanguage: translationItem.targetLanguage,
+        translationId: translationItem.id,
+        dictionaryFolderId:
+          selectedDictionaryFolderId === "none"
+            ? undefined
+            : selectedDictionaryFolderId,
+      });
+
+      setDictionaryMessage("Translation saved to dictionary");
+    } catch {
+      setError("Failed to save translation to dictionary");
+    } finally {
+      setIsSavingToDictionary(false);
+    }
   }
 
   return (
@@ -234,6 +279,44 @@ export function TranslatePage() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Dictionary saving</CardTitle>
+          <CardDescription>
+            Choose a folder where translations will be saved.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-3">
+          <div className="space-y-2">
+            <Label>Dictionary folder</Label>
+
+            <Select
+              value={selectedDictionaryFolderId}
+              onValueChange={setSelectedDictionaryFolderId}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select dictionary folder" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="none">Without folder</SelectItem>
+
+                {dictionaryFolders.map((folder) => (
+                  <SelectItem key={folder.id} value={folder.id}>
+                    {folder.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {dictionaryMessage ? (
+            <p className="text-sm text-muted-foreground">{dictionaryMessage}</p>
+          ) : null}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Translation history</CardTitle>
           <CardDescription>Your latest saved translations.</CardDescription>
         </CardHeader>
@@ -269,16 +352,28 @@ export function TranslatePage() {
                       </div>
                     </div>
 
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() =>
-                        handleDeleteTranslation(translationItem.id)
-                      }
-                    >
-                      Delete
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isSavingToDictionary}
+                        onClick={() => handleSaveToDictionary(translationItem)}
+                      >
+                        Save
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          handleDeleteTranslation(translationItem.id)
+                        }
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
