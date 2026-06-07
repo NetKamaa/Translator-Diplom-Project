@@ -1,7 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 import { translateText } from "@/features/translate/api/translate.api";
-import type { TTranslation } from "@/features/translate/types/translate.types";
+import type { TTranslation } from "@/features/translations/types/translation.types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  deleteTranslation,
+  getTranslations,
+} from "@/features/translations/api/translations.api";
 
 const languageOptions = [
   { value: "en", label: "English" },
@@ -38,6 +42,25 @@ export function TranslatePage() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [translations, setTranslations] = useState<TTranslation[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadTranslations() {
+      try {
+        const data = await getTranslations();
+
+        setTranslations(data);
+      } catch {
+        setError("Failed to load translation history");
+      } finally {
+        setIsHistoryLoading(false);
+      }
+    }
+
+    loadTranslations();
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -59,10 +82,29 @@ export function TranslatePage() {
       });
 
       setTranslation(data);
+      setTranslations((currentTranslations) => [data, ...currentTranslations]);
     } catch {
       setError("Failed to translate text");
     } finally {
       setIsLoading(false);
+    }
+  }
+
+  async function handleDeleteTranslation(id: string) {
+    try {
+      await deleteTranslation(id);
+
+      setTranslations((currentTranslations) =>
+        currentTranslations.filter(
+          (translationItem) => translationItem.id !== id,
+        ),
+      );
+
+      if (translation?.id === id) {
+        setTranslation(null);
+      }
+    } catch {
+      setError("Failed to delete translation");
     }
   }
 
@@ -189,6 +231,61 @@ export function TranslatePage() {
           </CardContent>
         </Card>
       </form>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Translation history</CardTitle>
+          <CardDescription>Your latest saved translations.</CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          {isHistoryLoading ? (
+            <p className="text-sm text-muted-foreground">
+              Loading translation history...
+            </p>
+          ) : translations.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              You do not have translations yet.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {translations.map((translationItem) => (
+                <div key={translationItem.id} className="rounded-xl border p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2">
+                      <div className="text-xs text-muted-foreground">
+                        {translationItem.sourceLanguage} →{" "}
+                        {translationItem.targetLanguage}
+                      </div>
+
+                      <div>
+                        <p className="font-medium">
+                          {translationItem.sourceText}
+                        </p>
+
+                        <p className="text-muted-foreground">
+                          {translationItem.translatedText}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        handleDeleteTranslation(translationItem.id)
+                      }
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { api } from "@/lib/api";
 
-import type { TTranslateRequest, TTranslation } from "../types/translate.types";
+import type { TTranslation } from "@/features/translations/types/translation.types";
+import type { TTranslateRequest } from "../types/translate.types";
 
 export async function translateText(
   data: TTranslateRequest,
