@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { Link } from "react-router";
 
 import {
   createFlashcard,
@@ -212,6 +213,9 @@ export function FlashcardsPage() {
         </div>
 
         <div className="flex gap-3">
+          <Button variant="outline" asChild>
+            <Link to="/flashcards/practice">Practice</Link>
+          </Button>
           <Dialog
             open={isCreateDeckDialogOpen}
             onOpenChange={(open) => {

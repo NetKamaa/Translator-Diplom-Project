@@ -35,6 +35,13 @@ export function AppLayout() {
               Flashcards
             </Link>
 
+            <Link
+              to="/flashcards/practice"
+              className="text-sm text-muted-foreground"
+            >
+              Practice
+            </Link>
+
             <Link to="/profile" className="text-sm text-muted-foreground">
               Profile
             </Link>
