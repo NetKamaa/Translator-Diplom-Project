@@ -175,19 +175,19 @@ export function TranslatePage() {
           <CardHeader>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
               <div className="min-w-0 flex-1 space-y-1.5">
-                <CardTitle>Translation</CardTitle>
+                <CardTitle>Source text</CardTitle>
                 <CardDescription>
-                  The result will be saved to translation history.
+                  Enter the text you want to translate.
                 </CardDescription>
               </div>
 
               <div className="w-full shrink-0 space-y-2 sm:ml-auto sm:w-40">
                 <Select
-                  value={targetLanguage}
-                  onValueChange={setTargetLanguage}
+                  value={sourceLanguage}
+                  onValueChange={setSourceLanguage}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select target language" />
+                    <SelectValue placeholder="Select source language" />
                   </SelectTrigger>
 
                   <SelectContent>
