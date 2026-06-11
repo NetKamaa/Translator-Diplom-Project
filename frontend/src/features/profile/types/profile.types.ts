@@ -9,5 +9,5 @@ export type TUserProfile = {
 
 export type TUpdateUserProfileRequest = {
   nickname?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
 };

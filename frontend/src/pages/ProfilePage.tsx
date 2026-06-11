@@ -50,7 +50,7 @@ function ProfileSettingsForm({ profile }: TProfileSettingsFormProps) {
     try {
       const updatedProfile = await updateCurrentProfile({
         nickname: nickname.trim() || undefined,
-        avatarUrl: avatarUrl.trim() || undefined,
+        avatarUrl: avatarUrl.trim() === "" ? null : avatarUrl.trim(),
       });
 
       setNickname(updatedProfile.nickname ?? "");
