@@ -48,7 +48,7 @@ export function FlashcardsPage() {
 
   const [deckName, setDeckName] = useState("");
   const [deckDescription, setDeckDescription] = useState("");
-  const [deckColor, setDeckColor] = useState("#3b82f6");
+  const [deckColor, setDeckColor] = useState("#111827");
 
   const [frontText, setFrontText] = useState("");
   const [backText, setBackText] = useState("");
@@ -88,9 +88,9 @@ export function FlashcardsPage() {
     loadFlashcardsData();
   }, []);
 
-  const deckNameById = useMemo(() => {
-    return decks.reduce<Record<string, string>>((acc, deck) => {
-      acc[deck.id] = deck.name;
+  const deckById = useMemo(() => {
+    return decks.reduce<Record<string, TFlashcardDeck>>((acc, deck) => {
+      acc[deck.id] = deck;
 
       return acc;
     }, {});
@@ -132,7 +132,7 @@ export function FlashcardsPage() {
 
       setDeckName("");
       setDeckDescription("");
-      setDeckColor("#3b82f6");
+      setDeckColor("#111827");
       setIsCreateDeckDialogOpen(false);
     } catch {
       setDeckError("Failed to create flashcard deck");
@@ -270,9 +270,10 @@ export function FlashcardsPage() {
 
                   <Input
                     id="deckColor"
+                    type="color"
                     value={deckColor}
-                    placeholder="#3b82f6"
                     onChange={(event) => setDeckColor(event.target.value)}
+                    className="h-10 w-10 cursor-pointer rounded-full p-1"
                   />
                 </div>
 
@@ -400,7 +401,9 @@ export function FlashcardsPage() {
 
                 {decks.map((deck) => (
                   <SelectItem key={deck.id} value={deck.id}>
-                    {deck.name}
+                    <span style={{ color: deck.color ?? "#111827" }}>
+                      {deck.name}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -428,10 +431,20 @@ export function FlashcardsPage() {
                   <div className="space-y-4">
                     <div className="flex items-start justify-between gap-4">
                       <div className="text-xs text-muted-foreground">
-                        {flashcard.flashcardDeckId
-                          ? (deckNameById[flashcard.flashcardDeckId] ??
-                            "Unknown deck")
-                          : "Without deck"}
+                        {flashcard.flashcardDeckId ? (
+                          <span
+                            style={{
+                              color:
+                                deckById[flashcard.flashcardDeckId]?.color ??
+                                "#111827",
+                            }}
+                          >
+                            {deckById[flashcard.flashcardDeckId]?.name ??
+                              "Unknown deck"}
+                          </span>
+                        ) : (
+                          <span>Without deck</span>
+                        )}
                       </div>
 
                       <Button

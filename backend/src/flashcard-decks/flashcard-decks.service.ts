@@ -19,7 +19,7 @@ export class FlashcardDecksService {
           userId,
           name: dto.name,
           description: dto.description,
-          color: dto.color,
+          color: dto.color ?? '111827',
         },
       });
     } catch (error: unknown) {

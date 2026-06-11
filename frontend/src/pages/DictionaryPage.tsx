@@ -51,7 +51,7 @@ export function DictionaryPage() {
 
   const [folderName, setFolderName] = useState("");
   const [folderDescription, setFolderDescription] = useState("");
-  const [folderColor, setFolderColor] = useState("#3b82f6");
+  const [folderColor, setFolderColor] = useState("#111827");
 
   const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] =
     useState(false);
@@ -106,9 +106,9 @@ export function DictionaryPage() {
     loadDictionary();
   }, []);
 
-  const folderNameById = useMemo(() => {
-    return folders.reduce<Record<string, string>>((acc, folder) => {
-      acc[folder.id] = folder.name;
+  const folderById = useMemo(() => {
+    return folders.reduce<Record<string, TDictionaryFolder>>((acc, folder) => {
+      acc[folder.id] = folder;
 
       return acc;
     }, {});
@@ -150,7 +150,7 @@ export function DictionaryPage() {
 
       setFolderName("");
       setFolderDescription("");
-      setFolderColor("#3b82f6");
+      setFolderColor("#111827");
       setIsCreateFolderDialogOpen(false);
     } catch {
       setFolderError("Failed to create dictionary folder");
@@ -306,9 +306,10 @@ export function DictionaryPage() {
 
                 <Input
                   id="folderColor"
+                  type="color"
                   value={folderColor}
-                  placeholder="#3b82f6"
                   onChange={(event) => setFolderColor(event.target.value)}
+                  className="h-10 w-10 cursor-pointer rounded-full p-1"
                 />
               </div>
 
@@ -352,7 +353,9 @@ export function DictionaryPage() {
 
                 {folders.map((folder) => (
                   <SelectItem key={folder.id} value={folder.id}>
-                    {folder.name}
+                    <span style={{ color: folder.color ?? "#111827" }}>
+                      {folder.name}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -498,12 +501,20 @@ export function DictionaryPage() {
 
                         <span>·</span>
 
-                        <span>
-                          {entry.dictionaryFolderId
-                            ? (folderNameById[entry.dictionaryFolderId] ??
-                              "Unknown folder")
-                            : "Without folder"}
-                        </span>
+                        {entry.dictionaryFolderId ? (
+                          <span
+                            style={{
+                              color:
+                                folderById[entry.dictionaryFolderId]?.color ??
+                                "#111827",
+                            }}
+                          >
+                            {folderById[entry.dictionaryFolderId]?.name ??
+                              "Unknown folder"}
+                          </span>
+                        ) : (
+                          <span>Without folder</span>
+                        )}
                       </div>
 
                       <div>
