@@ -69,16 +69,6 @@ export function DashboardPage() {
             Track your translations, dictionary and flashcards.
           </p>
         </div>
-
-        <div className="flex gap-3">
-          <Button asChild>
-            <Link to="/translate">Translate text</Link>
-          </Button>
-
-          <Button variant="outline" asChild>
-            <Link to="/flashcards">Open flashcards</Link>
-          </Button>
-        </div>
       </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
@@ -175,7 +165,11 @@ export function DashboardPage() {
             </Button>
 
             <Button className="w-full justify-start" variant="outline" asChild>
-              <Link to="/flashcards">Practice flashcards</Link>
+              <Link to="/flashcards">Open flashcards</Link>
+            </Button>
+
+            <Button className="w-full justify-start" variant="outline" asChild>
+              <Link to="/flashcards/practice">Practice flashcards</Link>
             </Button>
 
             <Button className="w-full justify-start" variant="outline" asChild>
