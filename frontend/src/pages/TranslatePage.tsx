@@ -1,6 +1,15 @@
 import { useEffect, useState, type FormEvent } from "react";
 
+import {
+  createDictionaryEntry,
+  getDictionaryFolders,
+} from "@/features/dictionary/api/dictionary.api";
+import type { TDictionaryFolder } from "@/features/dictionary/types/dictionary.types";
 import { translateText } from "@/features/translate/api/translate.api";
+import {
+  deleteTranslation,
+  getTranslations,
+} from "@/features/translations/api/translations.api";
 import type { TTranslation } from "@/features/translations/types/translation.types";
 
 import { Button } from "@/components/ui/button";
@@ -20,15 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  createDictionaryEntry,
-  getDictionaryFolders,
-} from "@/features/dictionary/api/dictionary.api";
-import type { TDictionaryFolder } from "@/features/dictionary/types/dictionary.types";
-import {
-  deleteTranslation,
-  getTranslations,
-} from "@/features/translations/api/translations.api";
 
 const languageOptions = [
   { value: "en", label: "English" },
@@ -45,25 +45,26 @@ export function TranslatePage() {
 
   const [translation, setTranslation] = useState<TTranslation | null>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
   const [translations, setTranslations] = useState<TTranslation[]>([]);
-  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
-
   const [dictionaryFolders, setDictionaryFolders] = useState<
     TDictionaryFolder[]
   >([]);
 
   const [selectedDictionaryFolderId, setSelectedDictionaryFolderId] =
-    useState<string>("none");
+    useState("none");
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(true);
   const [isSavingToDictionary, setIsSavingToDictionary] = useState(false);
+
+  const [error, setError] = useState("");
   const [dictionaryMessage, setDictionaryMessage] = useState("");
 
   useEffect(() => {
     async function loadData() {
       try {
+        setError("");
+
         const [translationsData, foldersData] = await Promise.all([
           getTranslations(),
           getDictionaryFolders(),
@@ -78,7 +79,7 @@ export function TranslatePage() {
       }
     }
 
-    loadData();
+    void loadData();
   }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -90,6 +91,7 @@ export function TranslatePage() {
     }
 
     setError("");
+    setDictionaryMessage("");
     setTranslation(null);
     setIsLoading(true);
 
@@ -133,6 +135,7 @@ export function TranslatePage() {
 
     setSourceText(translation?.translatedText ?? sourceText);
     setTranslation(null);
+    setDictionaryMessage("");
   }
 
   async function handleSaveToDictionary(translationItem: TTranslation) {
@@ -181,7 +184,7 @@ export function TranslatePage() {
                 </CardDescription>
               </div>
 
-              <div className="w-full shrink-0 space-y-2 sm:ml-auto sm:w-40">
+              <div className="w-full shrink-0 sm:ml-auto sm:w-40">
                 <Select
                   value={sourceLanguage}
                   onValueChange={setSourceLanguage}
@@ -243,7 +246,7 @@ export function TranslatePage() {
                 </CardDescription>
               </div>
 
-              <div className="w-full shrink-0 space-y-2 sm:ml-auto sm:w-40">
+              <div className="w-full shrink-0 sm:ml-auto sm:w-40">
                 <Select
                   value={targetLanguage}
                   onValueChange={setTargetLanguage}
@@ -314,7 +317,13 @@ export function TranslatePage() {
 
                 {dictionaryFolders.map((folder) => (
                   <SelectItem key={folder.id} value={folder.id}>
-                    {folder.name}
+                    <span
+                      style={{
+                        color: folder.color ?? "#111827",
+                      }}
+                    >
+                      {folder.name}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -346,7 +355,7 @@ export function TranslatePage() {
             <div className="space-y-3">
               {translations.map((translationItem) => (
                 <div key={translationItem.id} className="rounded-xl border p-4">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                     <div className="space-y-2">
                       <div className="text-xs text-muted-foreground">
                         {translationItem.sourceLanguage} →{" "}
@@ -364,7 +373,7 @@ export function TranslatePage() {
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex shrink-0 gap-2">
                       <Button
                         type="button"
                         variant="outline"
