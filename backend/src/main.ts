@@ -8,6 +8,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:5173',
     'https://translator-diplom-project.vercel.app',
+    'https://translator-diplom-project-git-main-netkamaas-projects.vercel.app',
     process.env.FRONTEND_URL,
   ].filter((origin): origin is string => Boolean(origin));
 
