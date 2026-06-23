@@ -7,8 +7,9 @@ async function bootstrap() {
 
   const allowedOrigins = [
     'http://localhost:5173',
+    'https://translator-diplom-project.vercel.app',
     process.env.FRONTEND_URL,
-  ].filter(Boolean);
+  ].filter((origin): origin is string => Boolean(origin));
 
   app.enableCors({
     origin: allowedOrigins,
