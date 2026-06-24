@@ -400,7 +400,9 @@ export function DictionaryPage() {
 
                   {flashcardDecks.map((deck) => (
                     <SelectItem key={deck.id} value={deck.id}>
-                      {deck.name}
+                      <span style={{ color: deck.color ?? "#111827" }}>
+                        {deck.name}
+                      </span>
                     </SelectItem>
                   ))}
                 </SelectContent>

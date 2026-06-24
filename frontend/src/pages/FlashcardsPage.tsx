@@ -54,6 +54,7 @@ export function FlashcardsPage() {
   const [backText, setBackText] = useState("");
   const [frontHint, setFrontHint] = useState("");
   const [backHint, setBackHint] = useState("");
+  const [cardDeckId, setCardDeckId] = useState("none");
 
   const [isCreateDeckDialogOpen, setIsCreateDeckDialogOpen] = useState(false);
   const [isCreateCardDialogOpen, setIsCreateCardDialogOpen] = useState(false);
@@ -85,7 +86,7 @@ export function FlashcardsPage() {
       }
     }
 
-    loadFlashcardsData();
+    void loadFlashcardsData();
   }, []);
 
   const deckById = useMemo(() => {
@@ -163,10 +164,7 @@ export function FlashcardsPage() {
         backText: backText.trim(),
         frontHint: frontHint.trim() || undefined,
         backHint: backHint.trim() || undefined,
-        flashcardDeckId:
-          selectedDeckId === "all" || selectedDeckId === "without-deck"
-            ? undefined
-            : selectedDeckId,
+        flashcardDeckId: cardDeckId === "none" ? undefined : cardDeckId,
       });
 
       setFlashcards((currentFlashcards) => [
@@ -178,6 +176,7 @@ export function FlashcardsPage() {
       setBackText("");
       setFrontHint("");
       setBackHint("");
+      setCardDeckId("none");
       setIsCreateCardDialogOpen(false);
     } catch {
       setCardError("Failed to create flashcard");
@@ -212,10 +211,11 @@ export function FlashcardsPage() {
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Button variant="outline" asChild>
             <Link to="/flashcards/practice">Practice</Link>
           </Button>
+
           <Dialog
             open={isCreateDeckDialogOpen}
             onOpenChange={(open) => {
@@ -295,6 +295,12 @@ export function FlashcardsPage() {
 
               if (open) {
                 setCardError("");
+
+                setCardDeckId(
+                  selectedDeckId === "all" || selectedDeckId === "without-deck"
+                    ? "none"
+                    : selectedDeckId,
+                );
               }
             }}
           >
@@ -311,6 +317,28 @@ export function FlashcardsPage() {
               </DialogHeader>
 
               <form className="space-y-5" onSubmit={handleCreateFlashcard}>
+                <div className="space-y-2">
+                  <Label>Deck</Label>
+
+                  <Select value={cardDeckId} onValueChange={setCardDeckId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select deck" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="none">Without deck</SelectItem>
+
+                      {decks.map((deck) => (
+                        <SelectItem key={deck.id} value={deck.id}>
+                          <span style={{ color: deck.color ?? "#111827" }}>
+                            {deck.name}
+                          </span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="frontText">Front text</Label>
 

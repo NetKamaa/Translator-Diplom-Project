@@ -64,9 +64,9 @@ export function FlashcardPracticePage() {
     loadPracticeData();
   }, []);
 
-  const deckNameById = useMemo(() => {
-    return decks.reduce<Record<string, string>>((acc, deck) => {
-      acc[deck.id] = deck.name;
+  const deckById = useMemo(() => {
+    return decks.reduce<Record<string, TFlashcardDeck>>((acc, deck) => {
+      acc[deck.id] = deck;
 
       return acc;
     }, {});
@@ -157,7 +157,9 @@ export function FlashcardPracticePage() {
 
                 {decks.map((deck) => (
                   <SelectItem key={deck.id} value={deck.id}>
-                    {deck.name}
+                    <span style={{ color: deck.color ?? "#111827" }}>
+                      {deck.name}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -220,10 +222,20 @@ export function FlashcardPracticePage() {
             </CardTitle>
 
             <CardDescription>
-              {currentFlashcard.flashcardDeckId
-                ? (deckNameById[currentFlashcard.flashcardDeckId] ??
-                  "Unknown deck")
-                : "Without deck"}
+              {currentFlashcard.flashcardDeckId ? (
+                <span
+                  style={{
+                    color:
+                      deckById[currentFlashcard.flashcardDeckId]?.color ??
+                      "#111827",
+                  }}
+                >
+                  {deckById[currentFlashcard.flashcardDeckId]?.name ??
+                    "Unknown deck"}
+                </span>
+              ) : (
+                "Without deck"
+              )}
             </CardDescription>
           </CardHeader>
 
